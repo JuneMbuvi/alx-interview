@@ -3,6 +3,8 @@
 
 
 def pascal_triangle(n):
+    """returns an empty list if n <= 0
+    n - integer"""
     if n <= 0:
         return []
 
