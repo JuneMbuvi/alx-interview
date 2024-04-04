@@ -9,7 +9,7 @@ def validUTF8(data):
     while i < len(data):
         leading_ones = 0
         mask = 1 << 7
-        while mask and data[i]:
+        while mask & data[i]:
             leading_ones += 1
             mask >>= 1
         if leading_ones == 0:
@@ -23,5 +23,5 @@ def validUTF8(data):
             if i >= len(data) or (data[i] >> 6) != 0b10:
                 return False
             i += 1
-            trailing_Bytes -= 1
+            trailing_bytes -= 1
     return True
