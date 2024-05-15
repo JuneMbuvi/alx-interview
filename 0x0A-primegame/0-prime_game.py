@@ -1,39 +1,57 @@
 #!/usr/bin/python3
-"""determine who the winner of each prime game"""
+"""Module defining a winner to the prime game"""
 
 
 def isWinner(x, nums):
-    """name of the player that won the most rounds"""
-    def isPrime(num):
-        if num <= 1:
+    """returns name of the player that won the most rounds"""
+    mariaWinsCount = 0
+    benWinsCount = 0
+
+    for num in nums:
+        roundsSet = list(range(1, num + 1))
+        primesSet = primes_in_range(1, num)
+
+        if not primesSet:
+            benWinsCount += 1
+            continue
+
+        isMariaTurns = True
+
+        while(True):
+            if not primesSet:
+                if isMariaTurns:
+                    benWinsCount += 1
+                else:
+                    mariaWinsCount += 1
+                break
+
+            smallestPrime = primesSet.pop(0)
+            roundsSet.remove(smallestPrime)
+
+            roundsSet = [x for x in roundsSet if x % smallestPrime != 0]
+
+            isMariaTurns = not isMariaTurns
+
+    if mariaWinsCount > benWinsCount:
+        return "Winner: Maria"
+
+    if mariaWinsCount < benWinsCount:
+        return "Winner: Ben"
+
+    return None
+
+
+def is_prime(n):
+    """Returns True if n is prime, else False."""
+    if n < 2:
+        return False
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
             return False
-        for i in range(2, int(num ** 0.5) + 1):
-            if num % i == 0:
-                return False
-        return True
+    return True
 
-    def gameWinner(primes, num):
-        if num == 1 or not primes:
-            return "Ben"
-        elif num in primes:
-            return "Maria"
-        else:
-            return "Maria" if num % 2 == 0 else "Ben"
 
-    maria_wins = 0
-    ben_wins = 0
-
-    for n in nums:
-        primes = [num for num in range(2, n + 1) if isPrime(num)]
-        winner = gameWinner(primes, n)
-        if winner == "Maria":
-            maria_wins += 1
-        elif winner == "Ben":
-            ben_wins += 1
-
-    if maria_wins > ben_wins:
-        return "Maria"
-    elif ben_wins > maria_wins:
-        return "Ben"
-    else:
-        return None
+def primes_in_range(start, end):
+    """Returns a list of prime numbers between start and end"""
+    primes = [n for n in range(start, end+1) if is_prime(n)]
+    return primes
